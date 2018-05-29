@@ -9,7 +9,7 @@ import org.junit.runners.JUnit4;
 public class BcyKeysAnalyzeTest {
 
     private static final String URL = "https://bcy.net/u/3118497/post";
-    private static final String MURL = "https://bcy.net/u/1038928/post";
+    private static final String MURL = "https://bcy.net/u/1038928/post";        //鳗鱼
 
     @Test
     public void getAlbumCoverAndUrl() {
