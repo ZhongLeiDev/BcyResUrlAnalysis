@@ -14,4 +14,6 @@ dependencies {
 //    compile fileTree(dir:'lib',includes:['*jar'])
     // https://mvnrepository.com/artifact/com.alibaba/fastjson
     compile group: 'com.alibaba', name: 'fastjson', version: '1.2.47'
+    // https://mvnrepository.com/artifact/net.sourceforge.htmlunit/htmlunit
+    compile group: 'net.sourceforge.htmlunit', name: 'htmlunit', version: '2.31'
 }
