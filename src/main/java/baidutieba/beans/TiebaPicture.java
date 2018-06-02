@@ -6,13 +6,9 @@ package baidutieba.beans;
 public class TiebaPicture {
 
     private String url;
-    private int width;
-    private int height;
 
-    public TiebaPicture(String url, int width, int height) {
+    public TiebaPicture(String url) {
         this.url = url;
-        this.width = width;
-        this.height = height;
     }
 
     public String getUrl() {
@@ -23,29 +19,11 @@ public class TiebaPicture {
         this.url = url;
     }
 
-    public int getWidth() {
-        return width;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
-    }
-
 
     @Override
     public String toString() {
         return "TiebaPicture{" +
                 "url='" + url + '\'' +
-                ", width=" + width +
-                ", height=" + height +
                 '}';
     }
 }

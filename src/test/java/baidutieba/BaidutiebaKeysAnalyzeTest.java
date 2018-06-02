@@ -11,6 +11,8 @@ import static org.junit.Assert.*;
 public class BaidutiebaKeysAnalyzeTest {
 
     private static final String BTURL = "https://tieba.baidu.com/p/2393081938";
+    private static final String BTURL1 = "https://tieba.baidu.com/p/2393081938?red_tag=0423286885";
+    private static final String BTURL2 = "https://tieba.baidu.com/p/2393081938?pn=3";
 
     @Test
     public void getRealTiebaImgUrl() {
@@ -27,4 +29,11 @@ public class BaidutiebaKeysAnalyzeTest {
         System.out.println("总页数：" + BaidutiebaKeysAnalyze.getAllPageCounts(src));
 
     }
+
+    @Test
+    public void getAllImgUrls() {
+        System.out.println(BaidutiebaKeysAnalyze.getAllImgUrls(BTURL));
+    }
+
+
 }
