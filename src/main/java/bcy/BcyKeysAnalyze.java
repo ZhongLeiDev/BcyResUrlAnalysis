@@ -48,4 +48,55 @@ public class BcyKeysAnalyze {
         return pageNum;
     }
 
+    /**
+     * 获取相册标签，多个标签用分号(;)隔开
+     * @param src
+     * @return
+     */
+    public static String getAlbumTag(String src) {
+        String albumTag = "";
+        Pattern pattern= Pattern.compile("\"/tags/name/[\\s\\S]*?\"");
+        Matcher matcher = pattern.matcher(src);
+        while(matcher.find()) {
+            albumTag += matcher.group().split("/")[3].replace("\"", "") + ";";
+        }
+        return albumTag;
+    }
+
+    /**
+     * 获取相册描述
+     * @param src
+     * @return
+     */
+    public static String getAlbumDescription(String src) {
+        String albumName = "";
+        Pattern pattern= Pattern.compile("<p class=\"mb20\">[\\s\\S]*?</p>");
+        Matcher matcher = pattern.matcher(src);
+        while(matcher.find()) {
+//            System.out.println(matcher.group());
+            albumName = matcher.group().replace("<br>","").split(">")[1].split("<")[0];
+        }
+       return albumName;
+    }
+
+    /**
+     * 获取相册名称
+     * @param src
+     * @return
+     */
+    public static String getAlbumName(String src) {
+        String albumDesc = "";
+        Pattern pattern= Pattern.compile("js-content-img-wrap[\\s\\S]*<br/>");
+        Matcher matcher = pattern.matcher(src);
+        while(matcher.find()) {
+//	    	System.out.println("AlbumDesc: " + matcher.group().replace("<br>",""));
+            albumDesc = matcher.group().replace("<br>","").split(">")[1].split("<")[0];
+        }
+        if (albumDesc.length()>2) {
+            return albumDesc.substring(1, albumDesc.length()-1);
+        } else {
+            return "空";
+        }
+    }
+
 }
