@@ -11,6 +11,7 @@ import static org.junit.Assert.*;
 public class DydKeysAnalyzeTest {
 
     private static final String DYDURL = "http://www.diyidan.com/main/post/6294359091003588274/detail/1";
+    private static final String DYDURL1 = "http://www.diyidan.com/main/post/6294630120662342678/detail/1";
 
     @Test
     public void getRealImgUrl() {
