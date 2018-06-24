@@ -15,6 +15,10 @@ public class DydAlbum {
     private String tags;
     private List<DydPicture> picList;
 
+    public DydAlbum() {
+
+    }
+
     public DydAlbum(int albumId, String author, String title, String description, String tags, List<DydPicture> picList) {
         this.albumId = albumId;
         this.author = author;

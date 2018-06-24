@@ -2,7 +2,9 @@ package dyd;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import common.linkshandle.WebLinksCatcher;
 import common.utils.ComUtils;
+import dyd.beans.DydAlbum;
 import dyd.beans.DydObject;
 import dyd.beans.DydPicture;
 
@@ -17,26 +19,48 @@ import java.util.regex.Pattern;
 public class DydKeysAnalyze {
 
     /**
-     * 获取图片链接（已变更，暂时不再使用2018-06-23）
-     * @param src
+     * 网页链接预处理，去掉后缀
+     * @param url
      * @return
      */
-    public static List<String> getRealImgUrl(String src) {
-        List<String> result = new ArrayList<String>();
-        String temp;
-        Pattern pattern= Pattern.compile("//image.diyidan.net/post/.{3,5}/.{1,3}/.{1,3}/.{10,25}(.jpg|jpeg|png|bmp)");
-        Matcher matcher = pattern.matcher(src);
-        while(matcher.find()) {
-            temp = "http:" + matcher.group();
-            if(!ComUtils.isItemExistInList(result, temp)) {
-                result.add(temp);
-            }
+    public static String preLoadUrl(String url) {
+        String result = "";
+        if (url.endsWith("#anchor_comment_floor")) {
+            result = url.replace("#anchor_comment_floor","");
+        } else {
+            result = url;
         }
         return result;
     }
 
     /**
-     * 获取图片 JSON 字符串
+     * 重定向到只看楼主
+     * @param preLoadUrl
+     * @return
+     */
+    public static String loadLouZhuUrl(String preLoadUrl) {
+        return preLoadUrl + "?louzhu=true";
+    }
+
+    /**
+     * 获取图片链接（方式1，针对未进行点击权限限制的页面）
+     * @param src
+     * @return
+     */
+    public static List<DydPicture> getRealImgUrl(String src) {
+        List<DydPicture> result = new ArrayList<>();
+        String temp;
+        Pattern pattern= Pattern.compile("//image.diyidan.net/post/.{3,5}/.{1,3}/.{1,3}/.{10,25}(.jpg|jpeg|png|bmp)!weblarge");
+        Matcher matcher = pattern.matcher(src);
+        while(matcher.find()) {
+            temp = "https:" + matcher.group();
+            result.add(new DydPicture(temp.replace("!weblarge",""),0,0));
+        }
+        return result;
+    }
+
+    /**
+     * 获取图片 JSON 字符串（方式2，针对进行了图片点击权限限制的页面）
      * @param src
      * @return
      */
@@ -112,12 +136,12 @@ public class DydKeysAnalyze {
      * @param src
      * @return
      */
-    public static int getAllPageCount(String src) {
-        int pageCount = 0;
+    public static String getAllPageCount(String src) {
+        String pageCount = "";
         Pattern pattern= Pattern.compile("共[\\S]{1,4}页");
         Matcher matcher = pattern.matcher(src);
         while(matcher.find()) {
-            pageCount = Integer.parseInt(matcher.group().replace("共","").replace("页",""));
+            pageCount = matcher.group().replace("共","").replace("页","");
         }
         return pageCount;
     }
@@ -151,6 +175,35 @@ public class DydKeysAnalyze {
             title = matcher.group().substring(7,matcher.group().length()-8);
         }
         return title;
+    }
+
+    /**
+     * 根据链接获取全部的图片单元，生成相册信息
+     * @param srcUrl
+     * @return
+     */
+    public static DydAlbum getAllPictures(String srcUrl) {
+        DydAlbum album = new DydAlbum();
+        String temp = WebLinksCatcher.getResponseFromHttpUrl(loadLouZhuUrl(preLoadUrl(srcUrl)), "utf-8");
+        album.setAuthor(getAuthor(temp));
+        album.setTags(getTags(temp));
+        album.setTitle(getTitle(temp));
+        album.setDescription(getDesc(temp));
+        String pageCount = getAllPageCount(temp);
+        if (pageCount.equals("")) {
+            pageCount = "1";
+        }
+        String realUrl = loadLouZhuUrl(preLoadUrl(srcUrl).substring(0,preLoadUrl(srcUrl).lastIndexOf("/")) + "/" + pageCount);
+        System.out.println("RealUrl->" + realUrl);
+        String src = WebLinksCatcher.getResponseFromHttpUrl(realUrl, "utf-8");
+        List<DydPicture> picList = new ArrayList<>();
+        picList = getRealImgUrl(src);
+        if (picList.size() == 0) {
+            picList = getDydPictureList(getPictureJSONStr(src));
+        }
+        System.out.println("相册共有图片数量共：" + picList.size() + "张");
+        album.setPicList(picList);
+        return album;
     }
 
 }
