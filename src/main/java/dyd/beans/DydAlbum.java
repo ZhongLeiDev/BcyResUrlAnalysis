@@ -8,7 +8,6 @@ import java.util.List;
  */
 public class DydAlbum {
 
-    private int albumId;
     private String author;
     private String title;
     private String description;
@@ -19,22 +18,12 @@ public class DydAlbum {
 
     }
 
-    public DydAlbum(int albumId, String author, String title, String description, String tags, List<DydPicture> picList) {
-        this.albumId = albumId;
+    public DydAlbum( String author, String title, String description, String tags, List<DydPicture> picList) {
         this.author = author;
         this.title = title;
         this.description = description;
         this.tags = tags;
         this.picList = picList;
-    }
-
-
-    public int getAlbumId() {
-        return albumId;
-    }
-
-    public void setAlbumId(int albumId) {
-        this.albumId = albumId;
     }
 
     public String getAuthor() {
@@ -80,7 +69,6 @@ public class DydAlbum {
     @Override
     public String toString() {
         return "DydAlbum{" +
-                "albumId=" + albumId +
                 ", author='" + author + '\'' +
                 ", description='" + description + '\'' +
                 ", tags='" + tags + '\'' +
